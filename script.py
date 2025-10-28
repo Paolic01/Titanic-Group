@@ -14,9 +14,9 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
 
-train_set = pd.read_csv("/Users/pasqualepaolicelli/Downloads/Titanic-Group/dati/train.csv")
+train_set = pd.read_csv("/Users/ludovicamontanaro/progetto_titanic /Titanic-Group/dati/train.csv")
 print(train_set.head())
-test_set = pd.read_csv("/Users/pasqualepaolicelli/Downloads/Titanic-Group/dati/test.csv")
+test_set = pd.read_csv("/Users/ludovicamontanaro/progetto_titanic /Titanic-Group/dati/test.csv")
 print(test_set.head())
 
 ## Check for missing values in the training set 
@@ -208,12 +208,12 @@ plt.legend(title='Sopravvivenza', labels=['Non Sopravvissuto', 'Sopravvissuto'])
 plt.show()
 
 # Visualizza l'importanza delle feature
-plt.figure(figsize=(8,5))
-sns.barplot(data=coefficients, x='Importanza', y='Feature', palette='viridis')
-plt.title('Importanza delle Feature nel Modello di Regressione Logistica')
-plt.xlabel('Peso Assoluto del Coefficiente')
-plt.ylabel('Feature')
-plt.show()
+#plt.figure(figsize=(8,5))
+#sns.barplot(data=coefficients, x='Importanza', y='Feature', palette='viridis')
+#plt.title('Importanza delle Feature nel Modello di Regressione Logistica')
+#plt.xlabel('Peso Assoluto del Coefficiente')
+#plt.ylabel('Feature')
+#plt.show()
 
 
 
@@ -240,6 +240,30 @@ sns.barplot(data=coefficients, x='Importanza', y='Feature', palette='viridis')
 plt.title('Importanza delle Feature nel Modello Random Forest')
 plt.xlabel('Importanza')
 plt.ylabel('Feature')
+plt.show()
+
+# Confusion matrix
+conf_matrix = confusion_matrix(y_valid, y_pred_rf)
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=['Non Sopravvissuti', 'Sopravvissuti'],
+            yticklabels=['Non Sopravvissuti', 'Sopravvissuti'])
+plt.title('Matrice di Confusione')
+plt.xlabel('Predizioni')
+plt.ylabel('Reali')
+plt.show()
+
+
+# ROC Curve
+y_pred_prob = rf_model.predict_proba(X_valid)[:, 1]
+fpr, tpr, _ = roc_curve(y_valid, y_pred_prob)
+roc_auc = auc(fpr, tpr)
+plt.plot(fpr, tpr, label='AUC = {:.2f}'.format(roc_auc))
+plt.plot([0, 1], [0, 1], 'k--')  # Linea di riferimento
+plt.title('Curva ROC')
+plt.xlabel('Tasso di Falsi Positivi')
+plt.ylabel('Tasso di Veri Positivi')
+plt.legend(loc='best')
 plt.show()
 
 
@@ -273,7 +297,29 @@ plt.xlabel('Importanza')
 plt.ylabel('Feature')
 plt.show()
 
+# Confusion matrix
+conf_matrix = confusion_matrix(y_valid, y_pred_xgb)
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=['Non Sopravvissuti', 'Sopravvissuti'],
+            yticklabels=['Non Sopravvissuti', 'Sopravvissuti'])
+plt.title('Matrice di Confusione')
+plt.xlabel('Predizioni')
+plt.ylabel('Reali')
+plt.show()
 
+
+# ROC Curve
+y_pred_prob = xgb_model.predict_proba(X_valid)[:, 1]
+fpr, tpr, _ = roc_curve(y_valid, y_pred_prob)
+roc_auc = auc(fpr, tpr)
+plt.plot(fpr, tpr, label='AUC = {:.2f}'.format(roc_auc))
+plt.plot([0, 1], [0, 1], 'k--')  # Linea di riferimento
+plt.title('Curva ROC')
+plt.xlabel('Tasso di Falsi Positivi')
+plt.ylabel('Tasso di Veri Positivi')
+plt.legend(loc='best')
+plt.show()
 
 
 
