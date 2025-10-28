@@ -14,9 +14,9 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
 
-train_set = pd.read_csv("/Users/pasqualepaolicelli/Downloads/Titanic-Group/dati/train.csv")
+train_set = pd.read_csv("C:\\Users\\Daniele\\Desktop\\titanic\\Titanic-Group\\dati\\train.csv")
 print(train_set.head())
-test_set = pd.read_csv("/Users/pasqualepaolicelli/Downloads/Titanic-Group/dati/test.csv")
+test_set = pd.read_csv("C:\\Users\\Daniele\\Desktop\\titanic\\Titanic-Group\\dati\\test.csv")
 print(test_set.head())
 
 ## Check for missing values in the training set 
@@ -272,6 +272,7 @@ plt.title('Importanza delle Feature nel Modello XGBoost')
 plt.xlabel('Importanza')
 plt.ylabel('Feature')
 plt.show()
+
 
 
 
