@@ -2,10 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 import pandas as pd
-train_set = pd.read_csv("/Users/pasqualepaolicelli/Downloads/Titanic-Group/dati/train.csv")
+train_set = pd.read_csv("/Users/ludovicamontanaro/progetto_titanic /Titanic-Group/dati/train.csv")
 print(train_set.head())
-test_set = pd.read_csv("/Users/pasqualepaolicelli/Downloads/Titanic-Group/dati/test.csv")
+test_set = pd.read_csv("/Users/ludovicamontanaro/progetto_titanic /Titanic-Group/dati/test.csv")
 print(test_set.head())
 
 ## Check for missing values in the training set
@@ -116,4 +117,49 @@ test_set['Sex'] = test_set['Sex'].map({'male': 0, 'female': 1})
 print("\n--- DOPO AVER MAPPATO Sex ---")
 print(train_set)
 print(test_set)
+
+
+#####################
+
+# Seleziona solo le colonne numeriche
+corr_features = ['Survived', 'Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Has_Cabin']
+corr_matrix = train_set[corr_features].corr()
+
+# Visualizza la matrice numerica
+print(corr_matrix.round(2))
+
+# Visualizza graficamente con heatmap
+plt.figure(figsize=(8,6))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Matrice di Correlazione - Titanic Dataset')
+plt.show()
+
+####################
+
+
+train_set = pd.get_dummies(train_set, columns=['Embarked'], drop_first=True)
+test_set = pd.get_dummies(test_set, columns=['Embarked'], drop_first=True)
+
+
+
+# Definisci le variabili di input e il target per il dataset di addestramento.
+X = train_set.drop(columns=['Survived', 'PassengerId', 'Name', 'Ticket'])
+y = train_set['Survived']
+
+#Per una maggiore precisione divido ulteriormente il set di addestramento in sottoinsieeme di addestramento e di validazione
+from sklearn.model_selection import train_test_split
+X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42)
+
+#Addestramento del modello di regressione logistica
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+model = LogisticRegression(max_iter=200)  # max_iter per garantire la convergenza
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_valid)
+
+print("Accuratezza:", accuracy_score(y_valid, y_pred))
+print(classification_report(y_valid, y_pred))
+
 
