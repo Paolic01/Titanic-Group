@@ -204,3 +204,5 @@ importances = rf_model.feature_importances_
 feature_names = X_train.columns
 coefficients = pd.DataFrame({'Feature': feature_names, 'Importanza': importances})
 coefficients = coefficients.sort_values(by='Importanza', ascending=False)
+
+# ciao
