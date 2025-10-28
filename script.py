@@ -118,13 +118,24 @@ print("\n--- DOPO AVER MAPPATO Sex ---")
 print(train_set)
 print(test_set)
 
-# Calcola la matrice di correlazione
-numeric_data = train_set.select_dtypes(include=[np.number])
-correlation_matrix = numeric_data.corr()
-plt.figure(figsize=(10, 8))  # Dimensioni della figura
-sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='coolwarm', square=True)
-plt.title('Matrice di Correlazione')
+
+#####################
+
+# Seleziona solo le colonne numeriche
+corr_features = ['Survived', 'Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Has_Cabin']
+corr_matrix = train_set[corr_features].corr()
+
+# Visualizza la matrice numerica
+print(corr_matrix.round(2))
+
+# Visualizza graficamente con heatmap
+plt.figure(figsize=(8,6))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Matrice di Correlazione - Titanic Dataset')
 plt.show()
+
+####################
+
 
 train_set = pd.get_dummies(train_set, columns=['Embarked'], drop_first=True)
 test_set = pd.get_dummies(test_set, columns=['Embarked'], drop_first=True)
@@ -150,3 +161,5 @@ y_pred = model.predict(X_valid)
 
 print("Accuratezza:", accuracy_score(y_valid, y_pred))
 print(classification_report(y_valid, y_pred))
+
+
